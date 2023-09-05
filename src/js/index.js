@@ -13,9 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const height = 630 - margin_top - margin_bottom;
 
     // !! CAMBIAR ESCALA DE COLOR  !! //
-    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    const colorScale = d3.scaleOrdinal(d3.schemeSet2);
     // !! CAMBIAR ESCALA DE COLOR  !! //
-
+    const timeFormat = d3.timeFormat("%M:%S");
     //^ TOOLTIP CREATION//
     const tooltipItem = d3.select("body").append("div").attr("class", "tooltip").attr("id", "tooltip").style("opacity", 0);
 
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //^ ADDING AXIS //
 
         xScale.domain([d3.min(rawData, (d) => d.Year - 1), d3.max(rawData, (d) => d.Year + 1)]);
-        yScale.domain(d3.extent(lista, (d) => d.Time));
+        yScale.domain(d3.extent(rawData, (d) => d.Time));
 
         graphContainer
             .append("g")
@@ -88,7 +88,18 @@ document.addEventListener("DOMContentLoaded", () => {
             .attr("cy", (d) => yScale(d.Time))
             .attr("data-xvalue", (d) => d.Year)
             .attr("data-yvalue", (d) => d.Time.toISOString())
-            .style("fill", (d) => color(d.Doping !== ""));
+            .style("fill", (d) => colorScale(d.Doping !== ""))
+            .on("mouseover", function (event, d) {
+                tooltipItem.style("opacity", 0.9);
+                tooltipItem.attr("data-year", d.Year);
+                tooltipItem
+                    .html(d.Name + ": " + d.Nationality + "<br/>" + "Year: " + d.Year + ", Time: " + timeFormat(d.Time) + (d.Doping ? "<br/><br/>" + d.Doping : ""))
+                    .style("left", event.pageX + "px")
+                    .style("top", event.pageY - 28 + "px");
+            })
+            .on("mouseout", function () {
+                tooltipItem.style("opacity", 0);
+            });
     };
     fetchData(api_link);
 });
