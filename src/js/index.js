@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .enter()
             .append("circle")
             .attr("class", "dot")
-            .attr("r", 8)
+            .attr("r", 7)
             .attr("cx", (d) => xScale(d.Year))
             .attr("cy", (d) => yScale(d.Time))
             .attr("data-xvalue", (d) => d.Year)
@@ -95,10 +95,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     .html(d.Name + ": " + d.Nationality + "<br/>" + "Year: " + d.Year + ", Time: " + timeFormat(d.Time) + (d.Doping ? "<br/><br/>" + d.Doping : ""))
                     .style("left", event.pageX + "px")
                     .style("top", event.pageY - 28 + "px")
-                    .style("opacity", 1);
+                    .style("opacity", 0.9);
             })
             .on("mouseout", () => tooltipItem.style("opacity", 0));
-
         const legendContainer = graphContainer.append("g").attr("id", "legend");
 
         const legends = legendContainer

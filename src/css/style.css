@@ -25,9 +25,11 @@ HTML {
 }
 SVG {
     margin: 0;
-    overflow: visible;
     border: solid black 2px;
     padding: 0.5rem;
+}
+SVG CIRCLE:hover {
+    fill: red;
 }
 BODY {
     position: relative;
@@ -75,4 +77,5 @@ TEXT {
     border-radius: 0.25rem;
     background: rgba(179, 176, 176, 0.815);
     opacity: 0;
+    pointer-events: none;
 }
