@@ -30,6 +30,7 @@ SVG {
     padding: 0.5rem;
 }
 BODY {
+    position: relative;
     margin: 0;
     padding: 0;
     display: flex;
@@ -67,4 +68,11 @@ TEXT {
 }
 .graph_container {
     margin-top: 2rem;
+}
+.tooltip {
+    position: fixed;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    background: rgba(179, 176, 176, 0.815);
+    opacity: 0;
 }

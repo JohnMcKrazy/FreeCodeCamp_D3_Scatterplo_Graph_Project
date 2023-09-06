@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // !! CAMBIAR ESCALA DE COLOR  !! //
     const timeFormat = d3.timeFormat("%M:%S");
     //^ TOOLTIP CREATION//
-    const tooltipItem = d3.select("body").append("div").attr("class", "tooltip").attr("id", "tooltip").style("opacity", 0);
+    const tooltipItem = d3.select("body").append("div").attr("class", "tooltip").attr("id", "tooltip");
 
     //^ SVG CREATION//
     const graphContainer = d3
@@ -83,22 +83,51 @@ document.addEventListener("DOMContentLoaded", () => {
             .enter()
             .append("circle")
             .attr("class", "dot")
-            .attr("r", 6)
+            .attr("r", 8)
             .attr("cx", (d) => xScale(d.Year))
             .attr("cy", (d) => yScale(d.Time))
             .attr("data-xvalue", (d) => d.Year)
             .attr("data-yvalue", (d) => d.Time.toISOString())
             .style("fill", (d) => colorScale(d.Doping !== ""))
-            .on("mouseover", function (event, d) {
-                tooltipItem.style("opacity", 0.9);
+            .on("mouseover", (event, d) => {
                 tooltipItem.attr("data-year", d.Year);
                 tooltipItem
                     .html(d.Name + ": " + d.Nationality + "<br/>" + "Year: " + d.Year + ", Time: " + timeFormat(d.Time) + (d.Doping ? "<br/><br/>" + d.Doping : ""))
                     .style("left", event.pageX + "px")
-                    .style("top", event.pageY - 28 + "px");
+                    .style("top", event.pageY - 28 + "px")
+                    .style("opacity", 1);
             })
-            .on("mouseout", function () {
-                tooltipItem.style("opacity", 0);
+            .on("mouseout", () => tooltipItem.style("opacity", 0));
+
+        const legendContainer = graphContainer.append("g").attr("id", "legend");
+
+        const legends = legendContainer
+            .selectAll(".legend")
+            .data(colorScale.domain())
+            .enter()
+            .append("g")
+            .attr("class", "legend-label")
+            .attr("transform", (d, i) => `translate(0,${70 / 2 - i * 30})`);
+
+        legends
+            .append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", colorScale);
+
+        legends
+            .append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text((d) => {
+                if (d) {
+                    return "Riders with doping allegations";
+                } else {
+                    return "No doping allegations";
+                }
             });
     };
     fetchData(api_link);
